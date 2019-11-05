@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:1.17.2-alpine
+    networks:
+      - default
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      # - uploads:/var/www/uploads:ro
+      - ${APP_PATH}:/var/www/html:ro
+
+  # Пока mysql не используется, и я хз как его надо конфигурировать.
+  # mysql:
+  #   image: mysql:5.7
+
+  #   volumes:
+  #     - "dbdata:/var/lib/mysql"
+
+  # php-fpm + исходный код приложения.
+  application:
+    # image: php:7.1-fpm-alpine
+    build: ./docker/application/
+    environment:
+      # Возможно, для windows надо такой remote_host использовать
+      # XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1
+      # Для linux - хост всегда доступен по этому адресу
+      XDEBUG_CONFIG: remote_host=172.17.0.1 remote_port=9000 remote_enable=1
+    volumes:
+      - ${APP_PATH}:/var/www/html/:ro
+      # - uploads:/var/www/uploads
+
+volumes:
+  dbdata:
+  # uploads:

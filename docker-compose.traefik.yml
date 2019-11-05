@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  nginx:
+    networks:
+      - traefik_web
+    labels:
+      traefik.frontend.rule: "Host:${HOST}"
+      traefik.enable: true
+      # Похоже, обязательно, так как иначе traefik может пытаться достучаться к контейнеру через сеть, к которой у него
+      # нет доступа
+      traefik.docker.network: traefik_web
+
+networks:
+  traefik_web:
+    external: true
