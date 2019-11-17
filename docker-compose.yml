@@ -10,12 +10,14 @@ services:
       # - uploads:/var/www/uploads:ro
       - ${APP_PATH}:/var/www/html:ro
 
-  # Пока mysql не используется, и я хз как его надо конфигурировать.
-  # mysql:
-  #   image: mysql:5.7
+  mysql:
+    # image: mysql:5.7
+    build: ./docker/mysql/
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
-  #   volumes:
-  #     - "dbdata:/var/lib/mysql"
+    volumes:
+      - "dbdata:/var/lib/mysql"
 
   # php-fpm + исходный код приложения.
   application:

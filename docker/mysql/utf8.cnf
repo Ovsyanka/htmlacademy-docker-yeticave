@@ -1,0 +1,55 @@
+# Файл настроек БД для того, чтобы использовалась корректная кодировка utf8
+# Документация по формату файла: https://dev.mysql.com/doc/refman/5.7/en/option-files.html
+# Настройки кодировок: https://dev.mysql.com/doc/refman/8.0/en/charset-syntax.html
+# Статья на русском: https://gahcep.github.io/blog/2013/01/05/mysql-utf8/
+
+# В перспективе хорошо бы использовать utf8mb4 / utf8mb4_unicode_ci, но как сделать, чтобы работало с текущей версией БД
+# надо разбираться.
+# Syntax error or access violation: 1071 Specified key was too long; max key length is 767 bytes
+
+# Как должны выглядеть настройки (запрос через консоль mysql)
+
+# docker-compose exec mysql mysql -e "show variables like 'collation%';"
+# +----------------------+-----------------+
+# | Variable_name        | Value           |
+# +----------------------+-----------------+
+# | collation_connection | utf8_unicode_ci | (utf8_general_ci для root)
+# | collation_database   | utf8_unicode_ci |
+# | collation_server     | utf8_unicode_ci |
+# +----------------------+-----------------+
+#
+# docker-compose exec mysql mysql -e "show variables like 'char%';"
+# +--------------------------+----------------------------+
+# | Variable_name            | Value                      |
+# +--------------------------+----------------------------+
+# | character_set_client     | utf8                       |
+# | character_set_connection | utf8                       |
+# | character_set_database   | utf8                       |
+# | character_set_filesystem | binary                     |
+# | character_set_results    | utf8                       |
+# | character_set_server     | utf8                       |
+# | character_set_system     | utf8                       |
+# | character_sets_dir       | /usr/share/mysql/charsets/ |
+# +--------------------------+----------------------------+
+
+[mysqld]
+# нам нужно изменить используемую по умолчанию collation_connection с utf8_general_ci на utf8_unicode_ci
+# для пользователя с привелегией SUPER init_connet срабатывать не будет, надо это иметь ввиду. Неплохо бы создать
+# отдельного пользователя для бд.
+init_connect=‘SET collation_connection = utf8_unicode_ci’
+
+# устанавливаем настройки для сервера - они и будут использоваться по умолчанию для всего остального (бд, таблицы, колонки)
+character-set-server = utf8
+collation-server = utf8_unicode_ci
+
+# внешние клиенты (php) должны быть сами корректно настроены
+
+# можно использовать эту опцию для того, чтобы игнорировать их настройки, но я думаю, не стоит без необходимости.
+# Правда, если ее указать, то и под рутовым пользователем будет collation_connection = utf8_unicode_ci
+# skip-character-set-client-handshake
+
+
+# для клиентов, таких как mysql, mysqldump и т.п.
+[client]
+default-character-set = utf8
+
