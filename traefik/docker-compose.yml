@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    image: traefik:v1.7.14 # The official Traefik docker image
+    container_name: traefik
+    restart: always
+    # Я должен использовать либо toml конфиг, либо команду с опциями тут. Если указана команда - конфигурационный файл
+    # игнорится. https://github.com/containous/traefik/issues/663
+    # command: --api --docker # Enables the web UI and tells Traefik to listen to docker
+    ports:
+      - 80:80
+      - 8080:8080 # The trafik dashboard
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
+      - ./traefik.toml:/traefik.toml:ro
+
+networks:
+  web:
+    # external: true

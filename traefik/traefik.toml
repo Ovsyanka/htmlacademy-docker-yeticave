@@ -1,0 +1,26 @@
+# debug = true
+# logLevel = "DEBUG"
+
+debug = false
+logLevel = "ERROR"
+
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+[retry]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+# по умолчанию docker.localhost
+domain = "docker.localhost"
+watch = true
+exposedByDefault = false
+
+# API definition
+# Warning: Enabling API will expose Traefik's configuration.
+# It is not recommended in production,
+# unless secured by authentication and authorizations
+[api]
