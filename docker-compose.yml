@@ -21,7 +21,7 @@ services:
 
   # php-fpm + исходный код приложения.
   application:
-    # image: php:7.1-fpm-alpine
+    # image: php:7.2-fpm-alpine
     build: ./docker/application/
     environment:
       # Возможно, для windows надо такой remote_host использовать
@@ -30,6 +30,9 @@ services:
       XDEBUG_CONFIG: remote_host=172.17.0.1 remote_port=9000 remote_enable=1
     volumes:
       - ${APP_PATH}:/var/www/html/:ro
+      - ${APP_PATH}/vendor:/var/www/html/vendor:rw
+      - ${APP_PATH}/composer.json:/var/www/html/composer.json:rw
+      - ${APP_PATH}/composer.lock:/var/www/html/composer.lock:rw
       - uploads:/var/www/html/uploads:rw
 
 volumes:
