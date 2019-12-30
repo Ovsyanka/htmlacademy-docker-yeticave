@@ -7,7 +7,7 @@ services:
       - default
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      # - uploads:/var/www/uploads:ro
+      - uploads:/var/www/html/uploads:ro
       - ${APP_PATH}:/var/www/html:ro
 
   mysql:
@@ -30,8 +30,11 @@ services:
       XDEBUG_CONFIG: remote_host=172.17.0.1 remote_port=9000 remote_enable=1
     volumes:
       - ${APP_PATH}:/var/www/html/:ro
-      # - uploads:/var/www/uploads
+      - uploads:/var/www/html/uploads:rw
 
 volumes:
   dbdata:
-  # uploads:
+  # для uploads использую volume в первую очередь для того, чтобы успростить установку прав на запись для php на нее.
+  # При разработке директория с исходным кодом маунтится к контейнеру и если uploads будет там нужно устанавливать ей на
+  # каком-то этапе права 0777, либо обеспечивать, чтобы id www-data в контейнера совпадал с id пользователя на хосте.
+  uploads:
