@@ -5,7 +5,7 @@ services:
     networks:
       - traefik_web
     labels:
-      traefik.frontend.rule: "Host:${HOST}"
+      traefik.frontend.rule: "Host:${SITE_URL}"
       traefik.enable: true
       # Похоже, обязательно, так как иначе traefik может пытаться достучаться к контейнеру через сеть, к которой у него
       # нет доступа
