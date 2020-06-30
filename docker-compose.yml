@@ -7,7 +7,7 @@ services:
       - default
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - uploads:/var/www/html/uploads:ro
+      - ${PWD}/uploads:/var/www/html/uploads:ro
       - ${PWD}:/var/www/html:ro
 
   mysql:
@@ -23,6 +23,7 @@ services:
   application:
     # image: php:7.2-fpm-alpine
     build: ./docker/application/
+    user: ${UID}:${GID}
     environment:
       # Возможно, для windows надо такой remote_host использовать
       # XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1
@@ -33,11 +34,7 @@ services:
       - ${PWD}/vendor:/var/www/html/vendor:rw
       - ${PWD}/composer.json:/var/www/html/composer.json:rw
       - ${PWD}/composer.lock:/var/www/html/composer.lock:rw
-      - uploads:/var/www/html/uploads:rw
+      - ${PWD}/uploads:/var/www/html/uploads:rw
 
 volumes:
   dbdata:
-  # для uploads использую volume в первую очередь для того, чтобы успростить установку прав на запись для php на нее.
-  # При разработке директория с исходным кодом маунтится к контейнеру и если uploads будет там нужно устанавливать ей на
-  # каком-то этапе права 0777, либо обеспечивать, чтобы id www-data в контейнера совпадал с id пользователя на хосте.
-  uploads:

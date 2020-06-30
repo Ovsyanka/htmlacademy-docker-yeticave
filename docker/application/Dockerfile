@@ -25,10 +25,3 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer global require hirak/prestissimo --prefer-dist --no-scripts
 
 WORKDIR /var/www/html
-
-# Юзер, под которым работает php должен иметь права на запись в эту директорию
-# Располагаю ее вне /var/www/html, чтобы не было путаницы - в html биндится директория с кодом.
-# RUN mkdir /var/www/uploads && chown www-data:www-data /var/www/uploads
-# Чтобы не менять php код проекта, который предполагает, что uploads будет там же где исходный код - решил оставить ее
-# там. Вместо uploads в директории с кодом будет использоваться именованный volume (см. docker-compose.yml)
-RUN mkdir /var/www/html/uploads && chown www-data:www-data /var/www/html/uploads
