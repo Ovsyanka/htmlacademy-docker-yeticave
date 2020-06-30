@@ -8,7 +8,7 @@ services:
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - uploads:/var/www/html/uploads:ro
-      - ${APP_PATH}:/var/www/html:ro
+      - ${PWD}:/var/www/html:ro
 
   mysql:
     # image: mysql:5.7
@@ -29,10 +29,10 @@ services:
       # Для linux - хост всегда доступен по этому адресу
       XDEBUG_CONFIG: remote_host=172.17.0.1 remote_port=9000 remote_enable=1
     volumes:
-      - ${APP_PATH}:/var/www/html/:ro
-      - ${APP_PATH}/vendor:/var/www/html/vendor:rw
-      - ${APP_PATH}/composer.json:/var/www/html/composer.json:rw
-      - ${APP_PATH}/composer.lock:/var/www/html/composer.lock:rw
+      - ${PWD}:/var/www/html/:ro
+      - ${PWD}/vendor:/var/www/html/vendor:rw
+      - ${PWD}/composer.json:/var/www/html/composer.json:rw
+      - ${PWD}/composer.lock:/var/www/html/composer.lock:rw
       - uploads:/var/www/html/uploads:rw
 
 volumes:
