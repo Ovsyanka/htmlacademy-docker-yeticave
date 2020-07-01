@@ -12,6 +12,9 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 # mysqli
 RUN docker-php-ext-install mysqli
 
+# needed for composer to install some packages
+RUN apk add --no-cache git
+
 # TODO: Пожалуй, правильнее тут использовать скрипт установки с сайта composer, поскольку при установке composer
 # проверяет настройки php, установленные библиотеки, версию php, наверное - и получается, что эти все проверки не
 # выполняются для моего окружения. Может быть уместно будет как-то multistage использовать для того, чтобы в итоге взять
