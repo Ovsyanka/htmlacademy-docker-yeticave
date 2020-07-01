@@ -22,7 +22,11 @@ services:
   # php-fpm + исходный код приложения.
   application:
     # image: php:7.2-fpm-alpine
-    build: ./docker/application/
+    build:
+      context: ./docker/application/
+      dockerfile: Dockerfile
+      args:
+        - GITHUB_TOKEN
     user: ${UID}:${GID}
     environment:
       # Возможно, для windows надо такой remote_host использовать
